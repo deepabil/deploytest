@@ -4,8 +4,7 @@ on:
   pull_request: 
     branches:
       -dev
-    
-name: Two Jobs Workflow
+    name: Two Jobs Workflow
 
 jobs:
  job1:
