@@ -1,11 +1,8 @@
 name: GCP Cloud Run Deployments
 on:
   push:
-    branches:
-      - dev
   pull_request:
-    branches:
-      - dev
+    
 name: Two Jobs Workflow
 
 jobs:
