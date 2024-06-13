@@ -9,6 +9,7 @@ on:
 name: Two Jobs Workflow
 
 jobs:
+
  job1:
     name: Job 1
     runs-on: ubuntu-latest
