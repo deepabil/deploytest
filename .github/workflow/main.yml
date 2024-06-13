@@ -1,0 +1,29 @@
+name: GCP Cloud Run Deployments
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+name: Two Jobs Workflow
+
+jobs:
+ job1:
+    name: Job 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Job 1
+        run: echo "This is Job 1"
+
+  job2:
+    name: Job 2
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Job 2
+        run: echo "This is Job 2"
