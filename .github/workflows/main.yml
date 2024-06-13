@@ -5,7 +5,6 @@ on:
     branches:
       -dev
     name: Two Jobs Workflow
-
 jobs:
  job1:
     name: Job 1
