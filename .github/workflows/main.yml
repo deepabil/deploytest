@@ -1,33 +1,43 @@
-name: Deploy to GCP
+name: Deploy to Cloud Run
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust to your main branch name
+
+permissions:
+  id-token: write  # Allows access to OIDC tokens
+  contents: read   # Allows reading repository contents
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: 'latest'
-          project_id: ${{ secrets.GCP_TEST_PROJECT_ID }}
-
-      - name: Authenticate to Google Cloud using Workload Identity Federation
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
-          service_account: your-service-account@unifycare-424906.iam.gserviceaccount.com
-  
+          service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
 
-      - name: Deploy to Google Cloud
+      - name: Build Docker image
         run: |
-          gcloud app deploy
+          docker build -t gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA .
+
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy my-node-app \
+            --image gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA \
+            --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated
+
 
 
