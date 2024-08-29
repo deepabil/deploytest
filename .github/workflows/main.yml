@@ -27,6 +27,7 @@ jobs:
         run: |
           docker build -t gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA .
 
+
       - name: Push Docker image
         run: |
           docker push gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA
