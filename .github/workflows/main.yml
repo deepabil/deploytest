@@ -6,12 +6,11 @@ on:
       - main  # Adjust to your main branch name
 
 permissions:
-  id-token: write  # Allows access to OIDC tokens
-  contents: read   # Allows reading repository contents
+  id-token: write
+  contents: read
 
 jobs:
-   Deploy_DEV:
-    name: DEV Environment Deployment
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +27,6 @@ jobs:
         run: |
           docker build -t gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA .
 
-
       - name: Push Docker image
         run: |
           docker push gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA
@@ -40,6 +38,3 @@ jobs:
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated
-
-
-
