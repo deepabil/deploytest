@@ -24,7 +24,7 @@ jobs:
         run: |
           gcloud auth login --brief --force
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS_WIF }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_TEST_CREDENTIALS_WIF }}
 
       - name: Set up Workload Identity Federation
         run: |
