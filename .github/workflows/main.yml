@@ -22,9 +22,9 @@ jobs:
       - name: Authenticate to Google Cloud using Workload Identity Federation
         uses: google-github-actions/auth@v1
         with:
-          token_format: 'workload-identity-federation'
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER_ID }}
-          workload_identity_pool: ${{ secrets.GCP_WORKLOAD_IDENTITY_POOL_ID }}
+          workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
+          service_account: your-service-account@unifycare-424906.iam.gserviceaccount.com
+  
 
       - name: Deploy to Google Cloud
         run: |
