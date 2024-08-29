@@ -10,7 +10,8 @@ permissions:
   contents: read   # Allows reading repository contents
 
 jobs:
-  build-and-deploy:
+   Deploy_DEV:
+    name: DEV Environment Deployment
     runs-on: ubuntu-latest
 
     steps:
