@@ -37,7 +37,7 @@ jobs:
           gcloud run deploy my-node-app \
             --image gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA \
             --platform managed \
-            --region ${{ secrets.GCP_REGION }} \
+            --region us-central1 \
             --allow-unauthenticated
 
 
