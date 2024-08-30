@@ -25,16 +25,16 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA .
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-app .
 
       - name: Push Docker image
         run: |
-          docker push gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA
-
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-app
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy my-node-app \
-            --image gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app:$GITHUB_SHA \
+            --image gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app
+            --set-env-vars ENV=dev
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated
