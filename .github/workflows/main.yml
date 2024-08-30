@@ -28,11 +28,11 @@ jobs:
       - name: Build Docker image
         run: |
           # Use the correct repository URL for GCR or Artifact Registry
-          docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest/my-node-app .
+          docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest .
 
       - name: Push Docker image
         run: |
-          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/<deploytest/my-node-app
+          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest
           
       - name: Deploy to Cloud Run
         run: |
