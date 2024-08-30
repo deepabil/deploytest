@@ -8,10 +8,12 @@ on:
 permissions:
   id-token: write
   contents: read
-
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    environment: dev
 
     steps:
       - name: Checkout code
@@ -30,6 +32,7 @@ jobs:
       - name: Push Docker image
         run: |
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-app
+          
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy my-node-app \
