@@ -24,14 +24,15 @@ jobs:
         with:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
           service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
-
+    
       - name: Build Docker image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-app .
+          # Use the correct repository URL for GCR or Artifact Registry
+          docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest/my-node-app .
 
       - name: Push Docker image
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-node-app
+          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/<deploytest/my-node-app
           
       - name: Deploy to Cloud Run
         run: |
