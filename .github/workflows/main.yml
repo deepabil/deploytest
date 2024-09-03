@@ -8,12 +8,17 @@ on:
 permissions:
   id-token: write
   contents: read
+env:
+  SERVICE_NAME: ${{ github.event.repository.name }}
+  RUN_REGION: us-central11
+  PORT: 8085
+  COMMIT_SHA: ${{ github.sha }}
   
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
-    environment: dev
+    env:
+     IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
 
     steps:
       - name: Checkout code
@@ -24,21 +29,14 @@ jobs:
         with:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
           service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
-    
+          
+
       - name: Build Docker image
-        run: |
-          # Use the correct repository URL for GCR or Artifact Registry
-          docker build -t us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest .
+        run: docker build -t $IMAGE_NAME .
 
       - name: Push Docker image
-        run: |
-          docker push us-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/deploytest
-          
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy my-node-app \
-            --image gcr.io/${{ secrets.GCP_TEST_PROJECT_ID }}/my-node-app
-            --set-env-vars ENV=dev
-            --platform managed \
-            --region us-central1 \
-            --allow-unauthenticated
+        run: docker push $IMAGE_NAME
+
+      - name: Deploy Docker image
+        run: gcloud run deploy $SERVICE_NAME --port=8085 --set-env-vars ENV=dev --project ${{ secrets.GCP_PROJECT_ID }} --memory 450Mi --min-instances 0 --max-instances 1 --image $IMAGE_NAME --region us-central1 --allow-unauthenticated --platform managed
+
