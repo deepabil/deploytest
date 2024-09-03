@@ -32,7 +32,7 @@ jobs:
           
 
       - name: Build Docker image
-        run: docker build -t gcr.io/unifycare-424906/test_image:latest .
+        run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: docker push $IMAGE_NAME
