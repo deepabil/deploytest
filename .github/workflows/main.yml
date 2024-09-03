@@ -33,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
-          version: 0.10.0
+          version: latest
           
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME:latest .
