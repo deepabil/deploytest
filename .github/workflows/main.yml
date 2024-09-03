@@ -29,9 +29,12 @@ jobs:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
           service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
 
-      # Use regular Docker build instead of Docker Buildx
-      - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:latest .
+
+      - name: List Docker Build Contexts
+        run: docker context ls
+
+      - name: Build Docker image without cache
+        run: docker build --no-cache -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: |
