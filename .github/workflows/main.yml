@@ -35,7 +35,9 @@ jobs:
         run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
-        run: docker push $IMAGE_NAME
+        run: | # Authenticate Docker with Google Cloud
+          gcloud auth configure-docker gcr.io
+          docker push $IMAGE_NAME
 
       - name: Deploy Docker image
         run: gcloud run deploy $SERVICE_NAME --port=8085 --set-env-vars ENV=dev --project ${{ secrets.GCP_PROJECT_ID }} --memory 450Mi --min-instances 0 --max-instances 1 --image $IMAGE_NAME --region us-central1 --allow-unauthenticated --platform managed
