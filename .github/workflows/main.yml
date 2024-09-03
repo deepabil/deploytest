@@ -10,7 +10,7 @@ permissions:
   contents: read
 env:
   SERVICE_NAME: ${{ github.event.repository.name }}
-  RUN_REGION: us-central11
+  RUN_REGION: us-central1  # Correct region for Cloud Run
   PORT: 8085
   COMMIT_SHA: ${{ github.sha }}
   
@@ -18,7 +18,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-     IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/$(echo ${{ secrets.GCP_APP_NAME }} | tr '[:upper:]' '[:lower:]')
 
     steps:
       - name: Checkout code
@@ -29,16 +29,26 @@ jobs:
         with:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
           service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
-          
 
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
-        run: | # Authenticate Docker with Google Cloud
+        run: |
+          # Authenticate Docker with Google Cloud
           gcloud auth configure-docker gcr.io
-          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME:latest
 
       - name: Deploy Docker image
-        run: gcloud run deploy $SERVICE_NAME --port=8085 --set-env-vars ENV=dev --project ${{ secrets.GCP_PROJECT_ID }} --memory 450Mi --min-instances 0 --max-instances 1 --image $IMAGE_NAME --region us-central1 --allow-unauthenticated --platform managed
-
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --port=$PORT \
+            --set-env-vars ENV=dev \
+            --project ${{ secrets.GCP_PROJECT_ID }} \
+            --memory 450Mi \
+            --min-instances 0 \
+            --max-instances 1 \
+            --image $IMAGE_NAME:latest \
+            --region $RUN_REGION \
+            --allow-unauthenticated \
+            --platform managed
