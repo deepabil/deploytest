@@ -13,7 +13,7 @@ env:
   RUN_REGION: us-central1  # Correct region for Cloud Run
   PORT: 8085
   COMMIT_SHA: ${{ github.sha }}
-  
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -29,14 +29,14 @@ jobs:
         with:
           workload_identity_provider: projects/1003608403675/locations/global/workloadIdentityPools/github-actions/providers/github-provider
           service_account: medical-admin-portal@unifycare-424906.iam.gserviceaccount.com
-          
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
           version: latest
-          
+
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:latest .
+        run: docker buildx build -t $IMAGE_NAME:latest .  # Ensure the context '.' is included
 
       - name: Push Docker image
         run: |
